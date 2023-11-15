@@ -7,6 +7,11 @@ type JsonResponse struct {
 	Message string `json:"message"`
 }
 
+type JsonErrorResponse struct {
+	Status uint16 `json:"status"`
+	Err    error  `json:"error"`
+}
+
 type JsonGetResponse struct {
 	Count   uint64 `json:"count"`
 	Status  uint16 `json:"status"`
@@ -26,10 +31,18 @@ func GetJsonResponse(c *gin.Context, count uint32, statusCode uint16, message st
 }
 
 func GenericJsonResponse(c *gin.Context, statusCode uint16, message string) {
-	res := map[string]any{
-		"status":  statusCode,
-		"message": message,
+	res := JsonResponse{
+		Status:  statusCode,
+		Message: message,
 	}
 
+	c.JSON(int(statusCode), res)
+}
+
+func ErrorResponse(c *gin.Context, statusCode uint16, err error) {
+	res := JsonErrorResponse{
+		Status: statusCode,
+		Err:    err,
+	}
 	c.JSON(int(statusCode), res)
 }

@@ -37,6 +37,28 @@ func (p *Produk) GetProduk(db *gorm.DB) ([]Produk, uint64, error) {
 	return produk, uint64(count), nil
 }
 
-func (p *Produk) EditProduk() {
+func (p *Produk) EditProduk(db *gorm.DB, id uint32) error {
+	err := db.Model(&Produk{}).
+		Where("id = ?", id).
+		Update(&p).
+		Error
 
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p *Produk) DeleteProduk(db *gorm.DB, id uint32) error {
+	err := db.Model(&Produk{}).
+		Where("id = ?", id).
+		Delete(&p).
+		Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
